@@ -1,19 +1,17 @@
 import sys, os
-import sd_common
+from sd_common import ask_and_publish, connection
 
 def main():
-    channel = sd_common.connection.channel()
+    channel = connection.channel()
     channel.exchange_declare(exchange='farm', exchange_type='topic')
 
     while(True):
         print("1. Chuva\n2. Geada\n")
         value = str(input("Selecione: "))
         if('1' == value):
-            print('\033[2JVai chover?\n')
-            sd_common.publish_will_occur(channel, routing_key="chuva")
+            ask_and_publish(channel, routing_key="chuva", verb="chover")
         elif('2' ==  value):
-            print('\033[2JVai gear?\n')
-            sd_common.publish_will_occur(channel, routing_key="geada")
+            ask_and_publish(channel, routing_key="geada", verb="gear")
         else:
             input("Entrada invalida. Pressione qualquer tecla para continuar...")
         print("\033[2J")
@@ -24,7 +22,7 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print('Interrupted')
-        sd_common.connection.close()
+        connection.close()
         try:
             sys.exit(0)
         except SystemExit:

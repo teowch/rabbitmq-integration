@@ -8,11 +8,11 @@ def publish_message(channel, value, routing_key):
             exchange='topic_logs', routing_key=routing_key, body=value)
     print(f" [x] Sent {routing_key}:{value}")
 
-def publish_will_occur(channel, routing_key):
-    value = input("1. Sim\n2. Nao")
-    if('1' == value):
-        publish_message(channel, "True", routing_key)
-    elif('2' == value):
-        publish_message(channel, "False", routing_key)
+def ask_and_publish(channel, routing_key, verb):
+    print(f'\033[2JVai {verb}?\n')
+    user_input = input("1. Sim\n2. Nao")
+    value = True if user_input == '1' else (False if user_input == '2' else None)
+    if value != None:
+        publish_message(channel, value, routing_key)
     else:
-        print("opcao invalida")
+        input("Entrada invalida. Pressione qualquer tecla para continuar...")
