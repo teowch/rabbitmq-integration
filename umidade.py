@@ -1,13 +1,15 @@
 import pika
 import sys, os
+import sd_common
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host='localhost'))
 
 def main():
+    print("\033[2J")
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='farm', exchange_type='topic')
+    channel.exchange_declare(exchange=sd_common.exchange_name, exchange_type='topic')
     routing_key = 'umidade'
 
     while(True):
@@ -17,8 +19,8 @@ def main():
             continue
     
         channel.basic_publish(
-            exchange='topic_logs', routing_key=routing_key, body=value)
-        print(f" [x] Sent {routing_key}:{value}")
+            exchange=sd_common.exchange_name, routing_key=routing_key, body=value)
+        print(f" [x] Sent {routing_key}:{value}\n")
 
 
 if __name__ == '__main__':
